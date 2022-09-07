@@ -11,8 +11,17 @@ defmodule CodeExample.Projections.GamesProjector do
 
   alias CodeExample.Game.Events.{GameCreated, GameEnded, NumberGuessed}
 
-  project(%GameCreated{}, _metadata, fn multi ->
+  project(%GameCreated{
+    game_id: game_id,
+  }, _metadata, fn multi ->
     multi
+    |> Ecto.Multi.insert(:games,
+      %CodeExample.Projections.Games{
+        game_id: game_id,
+        guesses: [],
+        started: false
+      }
+    )
   end)
 
   project(%GameEnded{}, _metadata, fn multi ->
