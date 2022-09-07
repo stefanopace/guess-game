@@ -9,7 +9,6 @@ defmodule CodeExample.Policies.NotifyPlayers do
     start_from: :current
 
   alias CodeExample.Game.Events.{GameEnded, NumberGuessed, PlayerJoined}
-  alias __MODULE__
 
   @impl Commanded.Event.Handler
   def handle(%GameEnded{}, _metadata) do
@@ -22,7 +21,8 @@ defmodule CodeExample.Policies.NotifyPlayers do
   end
 
   @impl Commanded.Event.Handler
-  def handle(%PlayerJoined{}, _metadata) do
+  def handle(%PlayerJoined{player1: player1}, _metadata) do
+    IO.puts "Message for #{player1}: player2 joined!"
     :ok
   end
 

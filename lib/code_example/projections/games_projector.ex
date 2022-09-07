@@ -9,19 +9,34 @@ defmodule CodeExample.Projections.GamesProjector do
     name: __MODULE__,
     start_from: :origin
 
-  alias CodeExample.Game.Events.{GameCreated, GameEnded, NumberGuessed}
+  alias CodeExample.Game.Events.{GameCreated, GameEnded, NumberGuessed, PlayerJoined}
 
-  project(%GameCreated{
-    game_id: game_id,
-  }, _metadata, fn multi ->
+  project(
+    %GameCreated{
+      game_id: game_id
+    },
+    _metadata,
+    fn multi ->
+      multi
+      |> Ecto.Multi.insert(
+        :games,
+        %CodeExample.Projections.Games{
+          game_id: game_id,
+          guesses: [],
+          started: false
+        }
+      )
+    end
+  )
+
+  project(%PlayerJoined{game_id: game_id}, _metadata, fn multi ->
     multi
-    |> Ecto.Multi.insert(:games,
-      %CodeExample.Projections.Games{
-        game_id: game_id,
-        guesses: [],
-        started: false
-      }
-    )
+    |> Ecto.Multi.run(:game_to_update, fn _repo, _changes ->
+      {:ok, CodeExample.Repo.get(CodeExample.Projections.Games, game_id)}
+    end)
+    |> Ecto.Multi.update(:games, fn %{game_to_update: game} ->
+      Ecto.Changeset.change(game, started: true)
+    end)
   end)
 
   project(%GameEnded{}, _metadata, fn multi ->

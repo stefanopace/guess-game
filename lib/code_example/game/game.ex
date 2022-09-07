@@ -44,6 +44,10 @@ defmodule CodeExample.Game do
     {:error, :this_game_already_started}
   end
 
+  def execute(%Game{player1: player1}, %JoinGame{player_name: player1}) do
+    {:error, :cannot_join_your_own_games}
+  end
+
   def execute(%Game{}, %JoinGame{player_name: ""}) do
     {:error, :player_name_cannot_be_empty}
   end
@@ -58,7 +62,7 @@ defmodule CodeExample.Game do
 
   # State mutators
 
-  def apply(%Game{} = state, %GameCreated{
+  def apply(%Game{}, %GameCreated{
         game_id: game_id,
         secret_number: secret_number,
         player1: player_name
