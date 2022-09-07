@@ -13,6 +13,8 @@ defmodule CodeExample.Game.Events.PlayerJoined do
   @derive Jason.Encoder
   defstruct [
     :game_id,
+    :player1,
+    :player2,
     version: 1
   ]
 

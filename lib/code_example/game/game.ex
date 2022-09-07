@@ -40,8 +40,20 @@ defmodule CodeExample.Game do
     :ok
   end
 
-  def execute(%Game{}, %JoinGame{}) do
-    :ok
+  def execute(%Game{player2: player2}, %JoinGame{}) when not is_nil(player2) do
+    {:error, :this_game_already_started}
+  end
+
+  def execute(%Game{}, %JoinGame{player_name: ""}) do
+    {:error, :player_name_cannot_be_empty}
+  end
+
+  def execute(%Game{game_id: game_id, player1: player1}, %JoinGame{player_name: player_name}) when not is_nil(player_name) do
+    %PlayerJoined{
+      game_id: game_id,
+      player1: player1,
+      player2: player_name,
+    }
   end
 
   # State mutators
@@ -69,7 +81,7 @@ defmodule CodeExample.Game do
     state
   end
 
-  def apply(%Game{} = state, %PlayerJoined{}) do
-    state
+  def apply(%Game{} = state, %PlayerJoined{player2: player2}) do
+    %Game{state | player2: player2}
   end
 end

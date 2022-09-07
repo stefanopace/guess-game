@@ -10,6 +10,7 @@ defmodule CodeExample.Game.Commands.JoinGame do
         }
 
   defstruct [
-    :game_id
+    :game_id,
+    :player_name
   ]
 end
