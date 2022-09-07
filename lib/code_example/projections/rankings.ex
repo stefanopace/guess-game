@@ -3,9 +3,17 @@ defmodule CodeExample.Projections.Rankings do
   Rankings.
   """
 
+  alias __MODULE__
+
   use Ecto.Schema
 
+  @primary_key {:player_name, :string, autogenerate: false}
   schema "rankings" do
-    # Fields ...
+    field(:wins, :integer)
+    timestamps()
+  end
+
+  def all() do
+    CodeExample.Repo.all(Rankings)
   end
 end

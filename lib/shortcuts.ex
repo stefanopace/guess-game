@@ -19,6 +19,10 @@ defmodule S do
     CodeExample.Projections.Games.guesses(game_id)
   end
 
+  def rankings() do
+    CodeExample.Projections.Rankings.all()
+  end
+
   def simulate_game() do
     create_game("ciccio") |> IO.inspect()
     game_id = games_not_started() |> List.first() |> IO.inspect()
