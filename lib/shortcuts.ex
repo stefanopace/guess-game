@@ -7,6 +7,10 @@ defmodule S do
     CodeExample.App.dispatch(%CodeExample.Game.Commands.JoinGame{game_id: game_id, player_name: name})
   end
 
+  def guess(game_id, name, number) do
+    CodeExample.App.dispatch(%CodeExample.Game.Commands.GuessNumber{game_id: game_id, player_name: name, number: number})
+  end
+
   def games_not_started() do
     CodeExample.Projections.Games.not_started()
   end

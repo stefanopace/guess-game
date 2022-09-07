@@ -13,6 +13,9 @@ defmodule CodeExample.Game.Events.NumberGuessed do
   @derive Jason.Encoder
   defstruct [
     :game_id,
+    :number,
+    :outcome,
+    :player_name,
     version: 1
   ]
 

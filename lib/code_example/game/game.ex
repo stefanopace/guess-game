@@ -36,8 +36,34 @@ defmodule CodeExample.Game do
     }
   end
 
-  def execute(%Game{}, %GuessNumber{}) do
-    :ok
+  def execute(
+        %Game{
+          game_id: game_id,
+          current_player: current_player,
+          player1: player1,
+          player2: player2,
+          secret_number: secret_number
+        },
+        %GuessNumber{
+          player_name: player_name,
+          number: number
+        }
+      ) do
+    cond do
+      current_player == 1 and player_name != player1 ->
+        {:error, :not_your_turn}
+
+      current_player == 2 and player_name != player2 ->
+        {:error, :not_your_turn}
+
+      true ->
+        %NumberGuessed{
+          game_id: game_id,
+          number: number,
+          player_name: player_name,
+          outcome: if(number > secret_number, do: :too_high, else: :too_low)
+        }
+    end
   end
 
   def execute(%Game{player2: player2}, %JoinGame{}) when not is_nil(player2) do
@@ -52,11 +78,12 @@ defmodule CodeExample.Game do
     {:error, :player_name_cannot_be_empty}
   end
 
-  def execute(%Game{game_id: game_id, player1: player1}, %JoinGame{player_name: player_name}) when not is_nil(player_name) do
+  def execute(%Game{game_id: game_id, player1: player1}, %JoinGame{player_name: player_name})
+      when not is_nil(player_name) do
     %PlayerJoined{
       game_id: game_id,
       player1: player1,
-      player2: player_name,
+      player2: player_name
     }
   end
 
@@ -81,8 +108,12 @@ defmodule CodeExample.Game do
     state
   end
 
-  def apply(%Game{} = state, %NumberGuessed{}) do
-    state
+  def apply(%Game{current_player: 1} = state, %NumberGuessed{}) do
+    %Game{state | current_player: 2}
+  end
+
+  def apply(%Game{current_player: 2} = state, %NumberGuessed{}) do
+    %Game{state | current_player: 1}
   end
 
   def apply(%Game{} = state, %PlayerJoined{player2: player2}) do

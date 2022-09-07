@@ -10,6 +10,8 @@ defmodule CodeExample.Game.Commands.GuessNumber do
         }
 
   defstruct [
-    :game_id
+    :game_id,
+    :player_name,
+    :number
   ]
 end
