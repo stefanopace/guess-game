@@ -13,6 +13,8 @@ defmodule CodeExample.Game.Events.GameEnded do
   @derive Jason.Encoder
   defstruct [
     :game_id,
+    :winning_player,
+    :losing_player,
     version: 1
   ]
 

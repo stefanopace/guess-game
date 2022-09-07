@@ -36,6 +36,10 @@ defmodule CodeExample.Game do
     }
   end
 
+  def execute(%Game{ended: true}, _) do
+    {:error, :this_game_has_ended}
+  end
+
   def execute(
         %Game{
           game_id: game_id,
@@ -57,12 +61,20 @@ defmodule CodeExample.Game do
         {:error, :not_your_turn}
 
       true ->
-        %NumberGuessed{
-          game_id: game_id,
-          number: number,
-          player_name: player_name,
-          outcome: if(number > secret_number, do: :too_high, else: :too_low)
-        }
+        if number == secret_number do
+          %GameEnded{
+            game_id: game_id,
+            winning_player: if(current_player == 1, do: player1, else: player2),
+            losing_player: if(current_player == 1, do: player2, else: player1)
+          }
+        else
+          %NumberGuessed{
+            game_id: game_id,
+            number: number,
+            player_name: player_name,
+            outcome: if(number > secret_number, do: :too_high, else: :too_low)
+          }
+        end
     end
   end
 
@@ -105,7 +117,7 @@ defmodule CodeExample.Game do
   end
 
   def apply(%Game{} = state, %GameEnded{}) do
-    state
+    %Game{state | ended: true}
   end
 
   def apply(%Game{current_player: 1} = state, %NumberGuessed{}) do
