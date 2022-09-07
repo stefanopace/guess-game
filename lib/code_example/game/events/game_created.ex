@@ -13,6 +13,8 @@ defmodule CodeExample.Game.Events.GameCreated do
   @derive Jason.Encoder
   defstruct [
     :game_id,
+    :player1,
+    :secret_number,
     version: 1
   ]
 

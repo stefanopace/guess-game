@@ -10,6 +10,8 @@ defmodule CodeExample.Game.Commands.CreateGame do
         }
 
   defstruct [
-    :game_id
+    :game_id,
+    :secret_number,
+    :player_name
   ]
 end
