@@ -16,7 +16,8 @@ defmodule CodeExample.Policies.NotifyPlayers do
   end
 
   @impl Commanded.Event.Handler
-  def handle(%NumberGuessed{}, _metadata) do
+  def handle(%NumberGuessed{outcome: outcome, player_name: player_name}, _metadata) do
+    IO.puts "Message for #{player_name}: #{outcome}!"
     :ok
   end
 

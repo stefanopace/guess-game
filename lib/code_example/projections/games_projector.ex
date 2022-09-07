@@ -43,9 +43,27 @@ defmodule CodeExample.Projections.GamesProjector do
     multi
   end)
 
-  project(%NumberGuessed{}, _metadata, fn multi ->
-    multi
-  end)
+  project(
+    %NumberGuessed{game_id: game_id, number: number, outcome: outcome},
+    _metadata,
+    fn multi ->
+      multi
+      |> Ecto.Multi.run(:game_to_update, fn _repo, _changes ->
+        {:ok, CodeExample.Repo.get(CodeExample.Projections.Games, game_id)}
+      end)
+      |> Ecto.Multi.update(:games, fn %{game_to_update: game} ->
+        new_guesses = [
+          %{
+            number: number,
+            outcome: outcome
+          }
+          | game.guesses
+        ]
+
+        Ecto.Changeset.change(game, guesses: new_guesses)
+      end)
+    end
+  )
 
   @impl Commanded.Event.Handler
   def error(_error, _failed_event, _failure_context) do
