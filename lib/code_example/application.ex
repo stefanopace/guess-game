@@ -14,8 +14,8 @@ defmodule CodeExample.Application do
       # Start the Ecto Repo
       CodeExample.Repo,
 
-      # Start process managers
-      {CodeExample.Processes.NotifyPlayers, hibernate_after: :timer.seconds(15)},
+      # Start policies
+      CodeExample.Policies.NotifyPlayers,
 
       # Start read model projectors
       {CodeExample.Projections.GamesProjector, hibernate_after: :timer.seconds(15)},
