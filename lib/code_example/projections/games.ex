@@ -19,7 +19,10 @@ defmodule CodeExample.Projections.Games do
   def guesses(id) do
     Games
     |> CodeExample.Repo.get(id)
-    |> Map.get(:guesses)
+    |> case do
+      nil -> nil
+      game -> Map.get(game, :guesses)
+    end
   end
 
   def not_started() do

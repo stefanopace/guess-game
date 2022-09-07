@@ -39,8 +39,14 @@ defmodule CodeExample.Projections.GamesProjector do
     end)
   end)
 
-  project(%GameEnded{}, _metadata, fn multi ->
+  project(%GameEnded{game_id: game_id}, _metadata, fn multi ->
     multi
+    |> Ecto.Multi.run(:game_to_delete, fn _repo, _changes ->
+      {:ok, CodeExample.Repo.get(CodeExample.Projections.Games, game_id)}
+    end)
+    |> Ecto.Multi.delete(:games, fn %{game_to_delete: game} ->
+      game
+    end)
   end)
 
   project(

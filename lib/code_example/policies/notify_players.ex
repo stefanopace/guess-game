@@ -11,7 +11,8 @@ defmodule CodeExample.Policies.NotifyPlayers do
   alias CodeExample.Game.Events.{GameEnded, NumberGuessed, PlayerJoined}
 
   @impl Commanded.Event.Handler
-  def handle(%GameEnded{}, _metadata) do
+  def handle(%GameEnded{winning_player: winning_player}, _metadata) do
+    IO.puts "Game over: #{winning_player} wins!"
     :ok
   end
 
